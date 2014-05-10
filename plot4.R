@@ -1,0 +1,22 @@
+plot4 <- function() {
+  datat<-read.table("household_power_consumption.txt",header=TRUE,sep=';')
+  datat$Date <- as.Date(datat$Date, format = "%d/%m/%Y")
+  requireddata <- datat[datat$Date %in% as.Date(c('2007-02-01','2007-02-02')),]
+  requireddata$Global_active_power<-as.numeric(as.character(requireddata$Global_active_power))
+  requireddata$Sub_metering_1 <- as.numeric(as.character(requireddata$Sub_metering_1))
+  requireddata$Sub_metering_2 <- as.numeric(as.character(requireddata$Sub_metering_2))
+  requireddata$Sub_metering_3 <- as.numeric(as.character(requireddata$Sub_metering_3))
+  requireddata$Voltage<-as.numeric(as.character(requireddata$Voltage))
+  requireddata$Global_reactive_power<-as.numeric(as.character(requireddata$Global_reactive_power))
+  png(file="plot4.png")
+  par(mfcol=c(2,2)) 
+  plot(strptime(paste(requireddata$Date,requireddata$Time), "%Y-%m-%d %H:%M:%S"),requireddata$Global_active_power,type="l",xlab="",ylab="Global Active Power (kilowatts)")
+  plot(strptime(paste(requireddata$Date,requireddata$Time), "%Y-%m-%d %H:%M:%S"),requireddata$Sub_metering_1,type="n",xlab="",ylab="Energy sub metering")
+  lines(strptime(paste(requireddata$Date,requireddata$Time), "%Y-%m-%d %H:%M:%S"),requireddata$Sub_metering_1,type="l",col="Black")
+  lines(strptime(paste(requireddata$Date,requireddata$Time), "%Y-%m-%d %H:%M:%S"),requireddata$Sub_metering_2,type="l",col="Red")
+  lines(strptime(paste(requireddata$Date,requireddata$Time), "%Y-%m-%d %H:%M:%S"),requireddata$Sub_metering_3,type="l",col="Blue")
+  legend("topright",legend=c("Sub_metering_1","Sub_metering_2","Sub_metering_3"),col=c("Black","Red","Blue"),lty=1)
+  plot(strptime(paste(requireddata$Date,requireddata$Time), "%Y-%m-%d %H:%M:%S"),requireddata$Voltage,type="l",xlab="datetime",ylab="Voltage")
+  plot(strptime(paste(requireddata$Date,requireddata$Time), "%Y-%m-%d %H:%M:%S"),requireddata$Global_reactive_power,type="l",xlab="datetime",ylab="Global_reactive_power")
+  dev.off()
+}
